@@ -12,28 +12,35 @@
     
     <style>
         /* === Universal Reset & Base Styles === */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+        html {
+            height: 100%;
+            overflow: hidden; 
         }
-
         body {
             font-family: 'Inter', Arial, sans-serif;
             background-color: #f4f4f4;
             line-height: 1.6;
             color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             padding-top: env(safe-area-inset-top, 0px);
             padding-left: env(safe-area-inset-left, 0px);
             padding-right: env(safe-area-inset-right, 0px);
             padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
+        main {
+            flex-grow: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
         /* Pseudo-element for the blurred background image */
-        body::before {
+        main::before {
             content: "";
             position: fixed;
             top: 0; left: 0;
@@ -46,20 +53,26 @@
             opacity: 0;
             transition: opacity 0.8s ease-in-out, filter 0.8s ease-in-out;
         }
-        body.detail-view-active::before {
+        body.detail-view-active main::before {
             opacity: 1;
             filter: blur(12px);
         }
         body.detail-view-active {
             background-color: transparent;
-            /* Prevent body scroll when detail is open */
-            overflow: hidden;
+        }
+        body.detail-view-active main {
+             overflow: hidden;
         }
 
-        .page-content-wrapper {
-            position: relative;
-            z-index: 1;
-            min-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+        /* --- NEW CONTAINER STYLES --- */
+        #gallery-container {
+            margin-bottom: -950px; /* Pulls the content down */
+            position: relative; /* Stacking context for z-index */
+            z-index: 2; /* Ensures it sits above the nav's background blur */
+        }
+        #detail-container {
+            display: none; /* Hidden by default */
+            height: 100%;
             display: flex;
             flex-direction: column;
         }
@@ -128,7 +141,7 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 20px 100px;
+            padding: 10px;
             grid-template-columns: repeat(4, 1fr);
             transition: opacity 0.3s ease-in-out;
         }
@@ -182,16 +195,15 @@
 
         /* --- Detail View Styles --- */
         #detail-view {
-            display: none;
-            padding: 20px 20px 100px;
+            padding: 20px;
             box-sizing: border-box;
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.4s ease-out, transform 0.4s ease-out;
             width: 100%;
-            flex: 1;
             display: flex;
             flex-direction: column;
+            flex-grow: 1;
         }
         #detail-view.visible {
             opacity: 1;
@@ -350,6 +362,12 @@
             left: 1rem;
         }
         
+        #bottom-nav {
+             flex-shrink: 0;
+             position: relative;
+             z-index: 1; /* Sits below the gallery container */
+        }
+
         /* === Hamburger Menu Animation === */
         .hamburger-line {
             transition: all 0.3s ease-in-out;
@@ -394,30 +412,33 @@
         <div class="loading-text">Loading Gallery...</div>
     </div>
 
-    <div class="page-content-wrapper">
-        <div id="gallery-view">
+    <main>
+        <div id="gallery-container">
+            <div id="gallery-view">
+            </div>
         </div>
-
-        <div id="detail-view">
-            <div id="detail-view-container">
-                <div id="detail-image-container">
-                    <img id="detail-image" src="" alt="Band Image">
-                </div>
-                
-                <div id="reviews-sidebar">
-                    <div class="reviews-header-container">
-                        <h3 id="reviews-title">Recent Reviews</h3>
-                        <a href="#" id="backToGalleryBtn" class="back-button">Back to Gallery</a>
+        <div id="detail-container">
+            <div id="detail-view">
+                <div id="detail-view-container">
+                    <div id="detail-image-container">
+                        <img id="detail-image" src="" alt="Band Image">
                     </div>
-                    <div id="reviews-container-detail">
-                        <p>No band selected.</p>
+                    
+                    <div id="reviews-sidebar">
+                        <div class="reviews-header-container">
+                            <h3 id="reviews-title">Recent Reviews</h3>
+                            <a href="#" id="backToGalleryBtn" class="back-button">Back to Gallery</a>
+                        </div>
+                        <div id="reviews-container-detail">
+                            <p>No band selected.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 z-50">
+    <div id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-gray-200">
         <div class="flex items-center w-full px-4 py-2 gap-4">
             
             <img class="w-12 h-12 rounded-full object-cover pointer-events-none" src="https://i.imghippo.com/files/vPMA5186Y.png" alt="User Profile Picture">
@@ -482,6 +503,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- Elements ---
+            const galleryContainer = document.getElementById('gallery-container');
+            const detailContainer = document.getElementById('detail-container');
             const galleryView = document.getElementById('gallery-view');
             const detailView = document.getElementById('detail-view');
             const backToGalleryBtn = document.getElementById('backToGalleryBtn');
@@ -566,35 +589,27 @@
                 detailImage.src = imageUrl;
                 detailImage.alt = `Image of ${bandName}`;
             
+                document.body.classList.add('detail-view-active');
                 document.body.style.setProperty('--blurred-bg-url', `url('${imageUrl}')`);
                 reviewsTitle.textContent = `Reviews for ${bandName}`;
-                document.body.classList.add('detail-view-active');
 
-                galleryView.style.opacity = '0';
-                setTimeout(() => {
-                    galleryView.style.display = 'none';
-                    detailView.style.display = 'flex';  
-                    requestAnimationFrame(() => {
-                        detailView.classList.add('visible');
-                    });
-                    loadAndDisplayReviews(bandName);
-                }, 300);
+                galleryContainer.style.display = 'none';
+                detailContainer.style.display = 'flex';
+                detailView.classList.add('visible');
+                
+                loadAndDisplayReviews(bandName);
             }
 
             function showGalleryView() {
-                detailView.classList.remove('visible');
                 document.body.classList.remove('detail-view-active');
-
+                detailView.classList.remove('visible');
+                
                 setTimeout(() => {
-                    galleryView.style.display = 'grid';
-                    requestAnimationFrame(() => galleryView.style.opacity = '1');
-                    
-                    detailView.style.display = 'none';
+                    galleryContainer.style.display = 'block';
+                    detailContainer.style.display = 'none';
                     reviewsContainer.innerHTML = '';
                     document.body.style.removeProperty('--blurred-bg-url');
-                    
                     detailImage.src = "";
-                    
                     reviewsTitle.textContent = 'Recent Reviews';
                 }, 500);
             }
@@ -605,7 +620,6 @@
             });
 
             // --- DATA FETCHING AND MINIMUM LOAD TIME LOGIC ---
-
             const minimumLoadTimePromise = new Promise(resolve => {
                 setTimeout(resolve, 1500);
             });
