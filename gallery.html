@@ -61,7 +61,7 @@
             background-color: transparent;
         }
         body.detail-view-active main {
-             overflow: hidden;
+            overflow: hidden;
         }
 
         /* --- NEW CONTAINER STYLES --- */
@@ -221,8 +221,10 @@
         #detail-image-container {
             flex: 2;
             display: flex;
+            flex-direction: column; /* MODIFIED */
             justify-content: center;
             align-items: center;
+            gap: 20px; /* ADDED */
         }
 
         #detail-image {
@@ -235,6 +237,20 @@
             border: 2px solid #ddd;
         }
 
+        /* --- NEW Website Button Style --- */
+        .visit-website-button {
+            display: none; /* Hidden by default */
+            padding: 12px 25px;
+            background-color: #1d4ed8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .visit-website-button:hover { background-color: #1e40af; }
+        
         .back-button {
             display: inline-block;
             margin: 0;  
@@ -363,9 +379,9 @@
         }
         
         #bottom-nav {
-             flex-shrink: 0;
-             position: relative;
-             z-index: 1; /* Sits below the gallery container */
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1; /* Sits below the gallery container */
         }
 
         /* === Hamburger Menu Animation === */
@@ -390,7 +406,7 @@
             #reviews-sidebar { max-height: none; width: 100%; flex-basis: auto; }
             .loading-image-container { width: 80vw; height: 40vw; } 
             #detail-image-container { order: -1; padding-bottom: 0; flex-basis: auto; }  
-            #detail-image { width: 300px; height: 300px; margin-bottom: 20px; }
+            #detail-image { width: 300px; height: 300px; margin-bottom: 0; }
         }
         @media (max-width: 768px) {
             #gallery-view { grid-template-columns: repeat(2, 1fr); }
@@ -422,6 +438,9 @@
                 <div id="detail-view-container">
                     <div id="detail-image-container">
                         <img id="detail-image" src="" alt="Band Image">
+                        <a id="visitWebsiteBtn" href="#" target="_blank" rel="noopener noreferrer" class="visit-website-button">
+                            <i class="fa-solid fa-globe" style="margin-right: 8px;"></i>Visit Website
+                        </a>
                     </div>
                     
                     <div id="reviews-sidebar">
@@ -451,10 +470,10 @@
                     <span class="text-xs font-semibold text-center">Bands Gallery</span>
                 </a>
                 <a href="https://www.mybandstonight.com/venue-map" target="_top" class="flex-1 flex flex-col items-center justify-center text-gray-500 hover:bg-blue-50 hover:text-blue-600 py-2 rounded-xl transition-all duration-300">
-                     <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                     </svg>
+                    <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
                     <span class="text-xs font-medium text-center">Venue Map</span>
                 </a>
                 <a href="https://www.mybandstonight.com/home" target="_top" class="flex-1 flex flex-col items-center justify-center text-gray-500 hover:bg-blue-50 hover:text-blue-600 py-2 rounded-xl transition-all duration-300">
@@ -471,7 +490,7 @@
                 </a>
                 <a href="https://www.mybandstonight.com/band-reviews" target="_top" class="flex-1 flex flex-col items-center justify-center text-gray-500 hover:bg-blue-50 hover:text-blue-600 py-2 rounded-xl transition-all duration-300">
                     <svg class="w-6 h-6 mb-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                     </svg>
                     <span class="text-xs font-medium text-center">Leave a Review</span>
                 </a>
@@ -511,6 +530,7 @@
             const loadingOverlay = document.getElementById('loadingOverlay');
             
             const detailImage = document.getElementById('detail-image');
+            const visitWebsiteBtn = document.getElementById('visitWebsiteBtn'); // ADDED
             
             const reviewsTitle = document.getElementById('reviews-title');
             const reviewsContainer = document.getElementById('reviews-container-detail');
@@ -585,10 +605,19 @@
                 }
             }
 
-            function showDetailView(imageUrl, bandName) {
+            // MODIFIED FUNCTION
+            function showDetailView(imageUrl, bandName, websiteUrl) {
                 detailImage.src = imageUrl;
                 detailImage.alt = `Image of ${bandName}`;
             
+                // Show or hide the website button based on if a URL is present
+                if (websiteUrl && websiteUrl.trim() !== '') {
+                    visitWebsiteBtn.href = websiteUrl;
+                    visitWebsiteBtn.style.display = 'inline-block';
+                } else {
+                    visitWebsiteBtn.style.display = 'none';
+                }
+                
                 document.body.classList.add('detail-view-active');
                 document.body.style.setProperty('--blurred-bg-url', `url('${imageUrl}')`);
                 reviewsTitle.textContent = `Reviews for ${bandName}`;
@@ -600,6 +629,7 @@
                 loadAndDisplayReviews(bandName);
             }
 
+            // MODIFIED FUNCTION
             function showGalleryView() {
                 document.body.classList.remove('detail-view-active');
                 detailView.classList.remove('visible');
@@ -610,6 +640,8 @@
                     reviewsContainer.innerHTML = '';
                     document.body.style.removeProperty('--blurred-bg-url');
                     detailImage.src = "";
+                    visitWebsiteBtn.style.display = 'none'; // Hide and reset button
+                    visitWebsiteBtn.href = "#";
                     reviewsTitle.textContent = 'Recent Reviews';
                 }, 500);
             }
@@ -634,20 +666,32 @@
 
                     const rows = csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
 
+                    // MODIFIED LOGIC: Start from the first row of data (slice(1))
                     rows.slice(1).forEach(row => {
-                        const columns = row.split(',');
-                        const imageUrl = columns.length > 0 ? columns.shift().trim() : '';
-                        const imageText = columns.length > 0 ? columns.join(',').trim().replace(/"/g, '') : '';
+                         // This regex handles CSV fields that may be quoted and contain commas
+                        const columns = [];
+                        row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g).forEach(field => {
+                            columns.push(field.replace(/"/g, ''));
+                        });
+                        
+                        // Expects 3 columns: Image URL, Band Name, Website URL
+                        const imageUrl = columns[0] ? columns[0].trim() : '';
+                        const imageText = columns[1] ? columns[1].trim() : '';
+                        const websiteUrl = columns[2] ? columns[2].trim() : ''; // Get the new website URL
 
                         if (imageUrl && imageText) {
                             const galleryItemDiv = document.createElement('div');
                             galleryItemDiv.classList.add('gallery-item');
-                            galleryItemDiv.addEventListener('click', () => showDetailView(imageUrl, imageText));
+                            // Pass all three data points to the detail view function
+                            galleryItemDiv.addEventListener('click', () => showDetailView(imageUrl, imageText, websiteUrl));
+                            
                             const img = document.createElement('img');
                             img.src = imageUrl;
                             img.alt = imageText;
+                            
                             const p = document.createElement('p');
                             p.textContent = imageText;
+                            
                             galleryItemDiv.appendChild(img);
                             galleryItemDiv.appendChild(p);
                             galleryView.appendChild(galleryItemDiv);
